@@ -1,0 +1,179 @@
+
+SELECT titulo, valor from livro WHERE id > 2;--pegar o nome e valor dos livros com id maior que 2
+SELECT MAX(valor) AS MaiorValor from livro;
+SELECT MIN(valor) AS MenorValor from livro;
+SELECT AVG(valor) AS MediaValor from livro;
+SELECT COUNT(valor) AS QuantidadeValor from livro;
+SELECT DISTINCT(valor) AS ValorUnico from livro;
+SELECT * FROM autor where idade > 30 OR altura > 1.8;
+SELECT * FROM autor where not(idade > 23);
+SELECT ROUND(altura * idade,2) FROM autor WHERE id > 2;
+SELECT altura + idade FROM autor;
+SELECT altura * idade FROM autor;
+SELECT ROUND(altura / idade,2) FROM autor;
+SELECT (idade % 2) as resto FROM autor where id = 2;
+SELECT id FROM autor where id >= 2;
+SELECT id FROM autor where id BETWEEN 2 AND 5;
+SELECT nome FROM editora WHERE id = 5;
+-- atividade 01
+
+
+CREATE TABLE autor(
+	id INTEGER NOT NULL PRIMARY KEY, nome VARCHAR(250), 
+    altura FLOAT(5,2), idade INT, nacionalidade VARCHAR(250)
+);
+
+SELECT *FROM autor; 
+
+INSERT INTO autor VALUES(1, 'Tannebaum', 1.78, 56, 'Estadunidense');
+INSERT INTO autor VALUES(2, 'Al-kaibir', 1.56, 23, 'Árabe');
+INSERT INTO autor VALUES(3, 'Toroskovov', 1.9, 41, 'Russo');
+INSERT INTO autor VALUES(4, 'Sun Tzu', 1.61, 18, 'Chinês');
+INSERT INTO autor VALUES(5, 'Aitofel', 1.41, 34, 'Hebreu');
+INSERT INTO autor VALUES(6, 'Paula Pimenta', 1.78, 56, 'Brasileiro');
+INSERT INTO autor VALUES(7, 'Machado de Assis', 1.56, 23, 'Brasileiro');
+INSERT INTO autor VALUES(8, 'Clarice Lispector', 1.9, 41, 'Brasileiro');
+INSERT INTO autor VALUES(9, 'Luis de Camões', 1.61, 18, 'Brasileiro');
+INSERT INTO autor VALUES(10, 'Mauricio de Souza', 1.41, 34, 'Brasileiro');
+
+
+SELECT ROUND(SQRT(CEIL(altura)),2) from autor;
+SELECT CONCAT(nome, ' ', idade) FROM autor;
+--SELECT SUBSTRING(nome FROM inicio FOR comprimento) FROM tabela;
+SELECT UPPER(nome) FROM autor;
+SELECT LOWER(nome) FROM autor;
+
+CREATE TABLE editora(
+	id INTEGER NOT NULL PRIMARY KEY, nome VARCHAR(250), 
+    renda FLOAT(5,2), colaborador INT  
+);
+
+SELECT *FROM editora;
+
+INSERT INTO editora VALUES(1, 'Saber e Conhecer', 1500000, 30);
+INSERT INTO editora VALUES(2, 'Sagah+', 356000, 12);
+INSERT INTO editora VALUES(3, 'Aprender e cia', 11000000, 50);
+INSERT INTO editora VALUES(4, 'Education Solution', 150000, 8);
+INSERT INTO editora VALUES(5, 'Conhecimento e Luz', 500000, 17);
+INSERT INTO editora VALUES(6, 'Adapt Educação', 550000, 8);
+INSERT INTO editora VALUES(7, 'Abdruschin o sábio', 500000, 17);
+
+CREATE TABLE livro(
+	id INTEGER NOT NULL PRIMARY KEY, titulo VARCHAR(250), 
+    valor FLOAT(5,2), id_autor INT, id_editora INT,
+    FOREIGN KEY(id_autor) REFERENCES autor(id),
+    FOREIGN KEY(id_editora) REFERENCES editora(id)
+);
+
+INSERT INTO livro VALUES(1, 'Assim falava Zaratrusta', 70.50, 1, 2);
+INSERT INTO livro VALUES(2, 'A arte da guerra', 20.7, 4, 3);
+INSERT INTO livro VALUES(3, 'O último Teorema de Fermat', 50, 5, 1);
+INSERT INTO livro VALUES(4, 'O segredo da maçonaria', 35.33, 2, 2);
+INSERT INTO livro VALUES(5, 'Deus e os astronautas', 80.50, 3, 4);
+INSERT INTO livro VALUES(6, 'Entre Anjos e Demônios', 32.50, 4, 4);
+INSERT INTO livro VALUES(7, 'Inferno - Dan Brawn', 70, 5, 3);
+INSERT INTO livro VALUES(8, 'Biblia Sagrada', 35.33, 2, 3);
+INSERT INTO livro VALUES(9, 'Alcorão', 30.50, 3, 7);
+INSERT INTO livro VALUES(10, 'Universo Racional', 32.50, 4, 5);
+
+SELECT *FROM livro;
+
+SELECT a.nome, a.idade, a.altura 
+FROM autor AS a
+ORDER BY a.nome ASC;
+
+SELECT a.nacionalidade, 
+COUNT(*) AS quantidade, ROUND(AVG(a.idade),2) AS media --AVG = media aritmedica
+FROM autor AS a
+GROUP BY a.nacionalidade
+HAVING SUM(a.idade) > 60;
+
+SELECT MAX(valor) FROM livro;
+
+SELECT COUNT(id) AS Quantidade from livro;
+
+SELECT a.nome, COUNT(l.titulo), ROUND(AVG(l.valor),2) AS media 
+FROM autor AS a, livro AS l
+GROUP BY a.nome
+HAVING a.id = l.id_autor;
+
+SELECT titulo, valor from livro WHERE id > 2;--pegar o nome e valor dos livros com id maior que 2
+SELECT MAX(valor) AS MaiorValor from livro;
+SELECT MIN(valor) AS MenorValor from livro;
+SELECT AVG(valor) AS MediaValor from livro;
+SELECT COUNT(valor) AS QuantidadeValor from livro;
+SELECT DISTINCT(valor) AS ValorUnico from livro;
+SELECT * FROM autor where idade > 30 OR altura > 1.8;
+SELECT * FROM autor where not(idade > 23);
+SELECT ROUND(altura * idade,2) FROM autor WHERE id > 2;
+SELECT altura + idade FROM autor;
+SELECT altura * idade FROM autor;
+SELECT ROUND(altura / idade,2) FROM autor;
+SELECT (idade % 2) as resto FROM autor where id = 2;
+SELECT id FROM autor where id >= 2;
+SELECT id FROM autor where id BETWEEN 2 AND 5;
+SELECT nome FROM editora WHERE id = 5;
+
+-- atividade 01
+-- 1
+SELECT a.nome, a.idade from livro AS l, autor as a, editora as e WHERE a.id = l.id_autor AND l.id_editora = e.id AND e.nome = 'Conhecimento e Luz';
+-- 2
+SELECT count(*) from autor as a, livro as l where a.id = l.id_autor AND l.id = 2;
+-- 3
+SELECT (altura * idade) as RESULTADO FROM autor as a, livro as l where a.id = l.id_autor and l.titulo = 'A arte da guerra';
+-- 4
+SELECT UPPER(e.nome) as EDITORA,UPPER(a.nome) AS AUTOR FROM editora as e, autor as a, livro as l where a.id = l.id_autor and l.titulo = 'O último Teorema de Fermat';
+-- 5
+SELECT a.id from autor as a, livro as l where a.id = l.id_autor and l.titulo = 'A arte da guerra';
+-- 6
+SELECT e.nome FROM editora as e, livro as l where e.id = l.id_editora AND e.id = 5;
+
+-- atividade 02
+--1
+SELECT COUNT (*) FROM livro WHERE id_autor = 2;
+-- 2
+SELECT nome FROM editora as e, livro as l WHERE e.id = l.id_editora AND l.id > 3;
+-- 3
+SELECT COUNT (*) FROM livro WHERE id_editora = 5;
+-- 4
+SELECT id and MAX(idade) from autor;
+-- 5
+SELECT a.nome, a.idade from livro AS l, autor as a, editora as e WHERE a.id = l.id_autor AND l.id_editora = e.id = 3;
+-- 6
+SELECT UPPER(nome) FROm editora WHERE id = 4;    
+-- 7
+SELECT LOWER(nome) FROm autor WHERE id = 3;    
+ 
+
+--atividade 03
+--01 ok
+SELECT MAX(valor) From livro;
+--02 ok
+SELECT a.nome from autor as a;
+--03 ok
+SELECT COUNT(id) as Quantidade FROM livro;
+--04 ok
+SELECT SUM(l.valor) From livro as l;
+--05 ok
+SELECT nacionalidade, COUNT(a.id) as QUANTIDADE, AVG(a.idade) AS MÉDIA, SUM(a.altura) AS SOMA from autor as a GROUP BY a.nacionalidade;
+--06
+SELECT MIN(valor) from livro AS l, editora as e WHERE e.nome = 'Conhecimento e Luz';
+
+-- atividade 04
+-- 01
+SELECT titulo FROM livro ORDER BY valor DESC;
+
+-- 02 Selecione os livros cujo preço está entre $10 e $20.
+SELECT categoria, COUNT(*) FROM produtos GROUP BY categoria HAVING COUNT(*) > 10 ORDER BY COUNT(*) DESC;
+
+-- 03 Encontrar os autores onde a média das alturas é superior a 1.5;
+SELECT nome, AVG(altura) AS Altura FROM autor GROUP BY nome HAVING AVG(altura) > 1.5;
+
+-- 04 Encontrar os livros que foi publicado pela editora x, escrito pelo autor y, que seu autor tem idade superior 30, altura maior que 1.75;
+select l.titulo from livro as l, editora as e, autor as a where e.nome = 'Education Solution' and a.nome = 'Toroskovov' AND a.idade >30 AND a.altura >1.75;
+
+-- 05 Encontrar os livros ESCRITO PELO AUTOR COM ID 5; 
+SELECT titulo FROM livro WHERE id_autor = 5;
+
+-- 06 Encontrar os livros com valor superior a 70 reais, ordenados pela média em ordem decrescente:
+SELECT l.titulo, AVG(l.valor) AS media FROM livro AS l WHERE l.valor > 70 GROUP BY l.id ORDER BY media DESC;
